@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Frederick Fuller — Research & Analysis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #080c12;
+      --bg2: #0e1420;
+      --bg3: #141c2e;
+      --border: rgba(255,255,255,0.07);
+      --border-bright: rgba(255,255,255,0.14);
+      --accent: #00e5ff;
+      --accent2: #7b61ff;
+      --accent3: #00ff9d;
+      --text: #e8edf5;
+      --muted: #7a8499;
+      --muted2: #4a5568;
+      --tag-bg: rgba(0,229,255,0.07);
+      --tag-border: rgba(0,229,255,0.2);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Top glow */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(0,229,255,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 1; }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(8,12,18,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.02em;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .nav-logo span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+
+    .nav-badge {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      padding: 4px 12px;
+      border-radius: 2px;
+      letter-spacing: 0.08em;
+    }
+
+    /* HERO */
+    .hero {
+      padding: 160px 0 100px;
+      position: relative;
+    }
+
+    .hero-eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 32px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(48px, 7vw, 88px);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    h1 .accent { color: var(--accent); }
+
+    .hero-sub {
+      font-size: 18px;
+      color: var(--muted);
+      font-weight: 300;
+      max-width: 580px;
+      margin: 24px 0 48px;
+      line-height: 1.8;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn-primary {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--accent);
+      border: none;
+      padding: 14px 28px;
+      border-radius: 2px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+
+    .btn-primary:hover { opacity: 0.85; }
+
+    .btn-ghost {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid var(--border-bright);
+      padding: 13px 28px;
+      border-radius: 2px;
+      text-decoration: none;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+
+    /* STATS STRIP */
+    .stats-strip {
+      padding: 40px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 100px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+
+    .stat {
+      padding: 0 32px;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat:first-child { padding-left: 0; }
+    .stat:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* SECTION HEADERS */
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 48px;
+    }
+
+    .section-eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .view-all {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .view-all:hover { color: var(--accent); }
+
+    /* RESEARCH CARDS */
+    .research-section { margin-bottom: 100px; }
+
+    .research-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .research-card {
+      background: var(--bg);
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.2s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .research-card:hover { background: var(--bg2); }
+
+    .research-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .research-card:hover::before { opacity: 1; }
+
+    .card-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .card-status.wip { color: #f59e0b; }
+    .card-status.wip::before {
+      content: '';
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #f59e0b;
+      animation: pulse 2s infinite;
+    }
+
+    .card-status.live { color: var(--accent3); }
+    .card-status.live::before {
+      content: '';
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent3);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .card-type {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted2);
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      padding: 4px 10px;
+      border-radius: 2px;
+    }
+
+    .card-arrow {
+      font-size: 18px;
+      color: var(--muted2);
+      transition: color 0.2s, transform 0.2s;
+      display: inline-block;
+    }
+
+    .research-card:hover .card-arrow {
+      color: var(--accent);
+      transform: translateX(4px);
+    }
+
+    /* ABOUT */
+    .about-section {
+      margin-bottom: 100px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .about-text h2 {
+      margin-bottom: 24px;
+    }
+
+    .about-text p {
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 20px;
+      font-size: 15px;
+    }
+
+    .about-text p strong { color: var(--text); font-weight: 500; }
+
+    .about-details {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 36px;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .detail-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted2);
+    }
+
+    .detail-value {
+      font-size: 14px;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .detail-value.accent { color: var(--accent); }
+
+    /* FOCUS AREAS */
+    .focus-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .focus-item {
+      background: var(--bg);
+      padding: 28px;
+    }
+
+    .focus-icon {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    .focus-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .focus-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+      margin-top: 40px;
+    }
+
+    footer .wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-left {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--muted2);
+      letter-spacing: 0.05em;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--accent); }
+
+    /* Fade in on load */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero > * { animation: fadeUp 0.6s ease both; }
+    .hero > *:nth-child(1) { animation-delay: 0.1s; }
+    .hero > *:nth-child(2) { animation-delay: 0.2s; }
+    .hero > *:nth-child(3) { animation-delay: 0.3s; }
+    .hero > *:nth-child(4) { animation-delay: 0.4s; }
+
+    @media (max-width: 768px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat { padding: 16px; border-right: none; border-bottom: 1px solid var(--border); }
+      .about-section { grid-template-columns: 1fr; gap: 40px; }
+      .focus-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      h1 { font-size: 44px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="wrap">
+      <a class="nav-logo" href="#">FF<span>.</span></a>
+      <ul class="nav-links">
+        <li><a href="#research">Research</a></li>
+        <li><a href="#models">Models</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+      <span class="nav-badge">Open to opportunities</span>
+    </div>
+  </nav>
+
+  <div class="wrap">
+
+    <section class="hero">
+      <div class="hero-eyebrow">Independent Research</div>
+      <h1>Frederick<br><span class="accent">Fuller</span></h1>
+      <p class="hero-sub">Economics graduate analyst focused on infrastructure investment, energy transition, and corporate credit markets. Building independent research and financial models at the intersection of capital markets and real assets.</p>
+      <div class="hero-ctas">
+        <a href="#research" class="btn-primary">View Research →</a>
+        <a href="#about" class="btn-ghost">About Me</a>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="stats-strip">
+    <div class="wrap">
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-num">3</div>
+          <div class="stat-label">Active Projects</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">DC</div>
+          <div class="stat-label">Data Centre Focus</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">RE</div>
+          <div class="stat-label">Renewables Modelling</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">2026</div>
+          <div class="stat-label">Graduate Cohort</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <section class="research-section" id="research">
+      <div class="section-header">
+        <div>
+          <div class="section-eyebrow">Research & Analysis</div>
+          <h2>Current Projects</h2>
+        </div>
+        <a href="#" class="view-all">All work ↗</a>
+      </div>
+
+      <div class="research-grid">
+
+        <a href="datacentre-report.html" class="research-card">
+          <div class="card-status wip">In Progress</div>
+          <div class="card-type">Industry Report</div>
+          <div class="card-title">Data Centre Infrastructure: Capital Markets & Investment Dynamics</div>
+          <div class="card-desc">An analysis of the capital requirements, financing structures, and investment landscape underpinning the UK and European data centre build-out driven by AI demand and digital infrastructure expansion.</div>
+          <div class="card-tags">
+            <span class="tag">Infrastructure</span>
+            <span class="tag">AI Demand</span>
+            <span class="tag">Capital Markets</span>
+            <span class="tag">UK/Europe</span>
+          </div>
+          <span class="card-arrow">→</span>
+        </a>
+
+        <a href="windfarm-model.html" class="research-card">
+          <div class="card-status wip">In Progress</div>
+          <div class="card-type">Financial Model</div>
+          <div class="card-title">Offshore Wind Project Finance: Debt Structuring & Returns Analysis</div>
+          <div class="card-desc">A bottom-up financial model examining project economics, debt structuring, and refinancing dynamics for UK offshore windfarm assets, with sensitivity analysis on power price and cost assumptions.</div>
+          <div class="card-tags">
+            <span class="tag">Renewables</span>
+            <span class="tag">Project Finance</span>
+            <span class="tag">Offshore Wind</span>
+            <span class="tag">Debt Markets</span>
+          </div>
+          <span class="card-arrow">→</span>
+        </a>
+
+        <a href="fuller-dissertation-2026.pdf" class="research-card" target="_blank">
+          <div class="card-status live">Submitted — Awaiting Grade</div>
+          <div class="card-type">Academic Research · Honours Dissertation</div>
+          <div class="card-title">Inflation Shocks and Bond Market Responses: A SVAR Comparison of the US and UK</div>
+          <div class="card-desc">Examines whether the Bank of England's inflation-targeting framework anchored bond market expectations more effectively than the Federal Reserve's dual mandate during the post-2020 inflation shock. The UK's pre-COVID credibility advantage eroded sharply after 2020 — the anchor bent, but did not break.</div>
+          <div class="card-tags">
+            <span class="tag">Monetary Economics</span>
+            <span class="tag">Central Bank Credibility</span>
+            <span class="tag">Bond Markets</span>
+            <span class="tag">SVAR</span>
+            <span class="tag">R</span>
+          </div>
+          <span class="card-arrow">→</span>
+        </a>
+
+      </div>
+    </section>
+
+    <section class="about-section" id="about">
+      <div class="about-text">
+        <div class="section-eyebrow">About</div>
+        <h2>Background</h2>
+        <p>I'm a final-year <strong>Economics student at the University of Strathclyde</strong> (predicted First Class), graduating summer 2026, with a deep interest in infrastructure investment, corporate credit markets, and the UK energy transition.</p>
+        <p>I interned at <strong>KPMG's Global Infrastructure Advisory</strong> division in Toronto, working across infrastructure impact analysis, ESG due diligence, and Public-Private Partnership proposals. I also completed a three-week analyst programme at <strong>AmplifyME</strong> in London, building valuation models and producing equity research.</p>
+        <p>Outside of formal experience, I build independent research and financial models on sectors I find genuinely compelling — currently focused on <strong>data centre infrastructure</strong> and <strong>offshore wind project finance</strong>, both at the intersection of long-duration capital and structural market shifts.</p>
+      </div>
+
+      <div>
+        <div class="about-details">
+          <div class="detail-row">
+            <span class="detail-label">Location</span>
+            <span class="detail-value">London, UK</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Education</span>
+            <span class="detail-value">BA Hons Economics, Strathclyde (2026)</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Experience</span>
+            <span class="detail-value">KPMG Global Infrastructure · AmplifyME</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Focus Areas</span>
+            <span class="detail-value accent">Infrastructure · Credit · Renewables</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Status</span>
+            <span class="detail-value accent">Open to opportunities</span>
+          </div>
+        </div>
+
+        <div style="margin-top: 48px;">
+          <div class="section-eyebrow" style="margin-bottom: 20px;">Areas of Focus</div>
+          <div class="focus-grid">
+            <div class="focus-item">
+              <div class="focus-icon">⚡</div>
+              <div class="focus-title">Energy Transition</div>
+              <div class="focus-desc">Offshore wind, project finance, power markets</div>
+            </div>
+            <div class="focus-item">
+              <div class="focus-icon">🏗</div>
+              <div class="focus-title">Digital Infrastructure</div>
+              <div class="focus-desc">Data centres, AI-driven capex, REIT structures</div>
+            </div>
+            <div class="focus-item">
+              <div class="focus-icon">📊</div>
+              <div class="focus-title">Credit Markets</div>
+              <div class="focus-desc">UK corporate refinancing, debt structuring</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <div class="wrap">
+      <div class="footer-left">© 2026 Frederick Fuller — Independent Research</div>
+      <div class="footer-links">
+        <a href="mailto:fjk.fuller@gmail.com">Email</a>
+        <a href="https://www.linkedin.com/in/frederick-fuller/" target="_blank">LinkedIn</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
